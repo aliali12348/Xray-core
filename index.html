@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Site Under Maintenance</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px 20px; background: #f3f4f6; color: #333; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h1 { color: #d97706; font-size: 24px; }
+        p { color: #666; margin-bottom: 30px; }
+        #qrcode { margin: 20px auto; display: inline-block; padding: 10px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; }
+        .config-text { word-break: break-all; background: #f9fafb; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; text-align: left; max-height: 80px; overflow-y: auto; border: 1px solid #eee; margin-top: 15px; }
+    </style>
+    <!-- لود کردن کتابخانه تولید QR Code بدون نیاز به اینترنت سرور -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>System Maintenance</h1>
+        <p>This node is currently undergoing scheduled updates. Please check back later.</p>
+        
+        <!-- این بخش کانفیگ مخفی شماست که کد QR در آن رندر می‌شود -->
+        <div id="qrcode"></div>
+        <div class="config-text" id="configLink">Loading config...</div>
+    </div>
+
+    <script>
+        // این مقادیر توسط اسکریپت start.sh به صورت خودکار جایگزین می‌شوند
+        const UUID = "{{UUID}}";
+        const PATH = "{{PATH}}";
+        const HOST = window.location.hostname;
+
+        // ساخت لینک استاندارد VLESS برای نرم‌افزارهای v2rayNG / Nekobox
+        const vlessLink = `vless://${UUID}@${HOST}:443?encryption=none&security=tls&type=ws&path=${encodeURIComponent(PATH)}#Railway-Xray`;
+        
+        document.getElementById('configLink').innerText = vlessLink;
+
+        // تولید خودکار QR Code
+        new QRCode(document.getElementById("qrcode"), {
+            text: vlessLink,
+            width: 220,
+            height: 220,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
+</body>
+</html>
